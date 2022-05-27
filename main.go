@@ -1,11 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
+	"net/http"
 )
 
+/*
 type person struct {
 	First string
 }
@@ -13,10 +13,10 @@ type person struct {
 type Bird struct {
 	Species     string
 	Description string
-}
+}*/
 
 func main() {
-	p1 := person{
+	/*p1 := person{
 		First: "Alcione",
 	}
 
@@ -44,13 +44,29 @@ func main() {
 		log.Panic(err)
 	}
 
-	fmt.Println("Back into a Go data structure", xp2)
+	fmt.Println("Back into a Go data structure", xp2)*/
 
 	/// ---------------------- =^.^= ----------------------
 
-	birdJson := `{"species": "pigeon", "description": "likes cookies"}`
+	/*birdJson := `{"species": "pigeon", "description": "likes cookies"}`
 	fmt.Println(birdJson)
 	var bird Bird
 	json.Unmarshal([]byte(birdJson), &bird)
-	fmt.Printf("Species: %s, Description: %s", bird.Species, bird.Description)
+	fmt.Printf("Species: %s, Description: %s", bird.Species, bird.Description)*/
+
+	/// ---- =^.^= encoding and decoding =^.^=-----
+	http.HandleFunc("/encode", foo)
+	http.HandleFunc("/decode", bar)
+	http.ListenAndServe(":8080", nil)
+	fmt.Println("Server running on port 8080")
+	fmt.Println("Press CONTROL + C to stop the server")
+
+}
+
+func foo(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func bar(w http.ResponseWriter, r *http.Request) {
+
 }
