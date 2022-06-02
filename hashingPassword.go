@@ -4,9 +4,29 @@ import (
 	"crypto/hmac"
 	"crypto/sha512"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 	"log"
+	"time"
 )
+
+// Custom claims object
+type UserClaims struct {
+	jwt.StandardClaims
+	SessionID int64
+}
+
+func (u *UserClaims) Valid() error {
+	if !u.VerifyExpiresAt(time.Now().Unix(), true) {
+		return fmt.Errorf("Tokes has expired")
+	}
+
+	if u.SessionID == 0 {
+		return fmt.Errorf("Invalid session ID")
+	}
+
+	return nil
+}
 
 var key = []byte{}
 
@@ -31,6 +51,7 @@ func main() {
 	log.Println("Logged in!")
 }
 
+// -------- =^.^= ---- Hashing the password  ---- =^.^= --------
 func hashPassword(password string) ([]byte, error) {
 	bs, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -47,6 +68,7 @@ func comparePassword(password string, hashedPass []byte) error {
 	return nil
 }
 
+// -------- =^.^= ---- Hmac - Hash Message Authentication Code - Cryptography    ---- =^.^= --------
 func signMessage(msg []byte) ([]byte, error) {
 	h := hmac.New(sha512.New, key)
 	_, err := h.Write(msg)
